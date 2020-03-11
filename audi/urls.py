@@ -68,4 +68,14 @@ urlpatterns = [
         views.set_result_status,
         name="set_result_status"
     ),
+    path(
+        'allstudapi/',
+        views.all_stud_api,
+        name="all_stud_api"
+    ),
+    path(
+        'studeet/<int:id>',
+        views.stud_deet_api,
+        name="stud_deet_api"
+    ),
 ]

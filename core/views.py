@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Student, AppConfig
+import json
 
 round_details = {
     1: 'Pen and Paper Round',
@@ -89,3 +90,32 @@ def set_result_status(request):
     config.show_results = not config.show_results
     config.save()
     return redirect('/dashboard')
+
+def all_stud_api(request):
+    students=Student.objects.all()
+    studs = list()
+    for s in students:
+        studs.append({
+            'name':s.name,
+            'year':str(s.year),
+            'dept':s.dept,
+            'stpd':s.stopped
+        })
+    print(studs)
+    return JsonResponse(studs, safe=False)
+
+def stud_deet_api(request,id):
+    if request.method=="POST":
+        stud=json.loads(request.body)
+        name=stud['name']
+        if name:
+            student=Student.objects.get(name=name)
+            print("request by name")
+            print(student.year)
+        else:
+            student=Student.objects.get(id=id)
+            print("request by id")
+            print(student.year)
+        return redirect('/')
+
+    
